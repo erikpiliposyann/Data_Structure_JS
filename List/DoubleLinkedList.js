@@ -89,6 +89,14 @@ class DLinkedList {
         return this.head.data;
     }
 
+    back() {
+        if (!this.tail) {
+            return;
+        }
+    
+        return this.tail.data;
+    }
+
     clear() {
         this.head = null;
         this.tail = null;
@@ -269,23 +277,35 @@ class DLinkedList {
 
     sort(cmp) {
         cmp = typeof cmp === 'function' ? cmp : (a, b) => a-b;
-        function merge(l1, l2,cmp) {
+        function merge(l1, l2, cmp) {
             let dummy = new Node(0);
             let tail = dummy;
 
             while (l1 && l2) {
                 if (cmp(l1.data, l2.data) <= 0) {
                     tail.next = l1;
+                    tail.next.prev = tail;
                     l1 = l1.next;
                 } else {
                     tail.next = l2;
+                    tail.next.prev = tail;
                     l2 = l2.next;
                 }
 
                 tail = tail.next;
             }
 
-            tail.next = l1 || l2;
+            if (l1) {
+                tail.next = l1;
+                l1.prev = tail;
+            } else if (l2) {
+                tail.next = l2;
+                l2.prev = tail;
+            }
+
+            if (dummy.next) {
+                dummy.next.prev = null;
+            }
 
             return dummy.next;
         }
@@ -305,15 +325,23 @@ class DLinkedList {
                 fast = fast.next.next;
             }
 
+            prev.next.prev = null;
             prev.next = null;
+
 
             let leftList = mergeSort(head, cmp);
             let rightList = mergeSort(slow, cmp);
 
             return merge(leftList, rightList, cmp);
         }
-
         this.head = mergeSort(this.head, cmp);
+
+        let current = this.head;
+
+        while (current && current.next) {
+            current = current.next;
+        }
+        this.tail = current;
     }
 
 
