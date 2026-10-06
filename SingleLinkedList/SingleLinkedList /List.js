@@ -239,73 +239,55 @@ class SLinkedList {
         }
     }
 
-    merge(l1, l2) {
-        if (!l1) {
-            return l2;
-        }
+    sort(cmp) {
+        cmp = typeof cmp === 'function' ? cmp : (a, b) => a-b;
+        function merge(l1, l2,cmp) {
+            let dummy = new Node(0);
+            let tail = dummy;
 
-        if (!l2) {
-            return l1;
-        }
+            while (l1 && l2) {
+                if (cmp(l1.data, l2.data) <= 0) {
+                    tail.next = l1;
+                    l1 = l1.next;
+                } else {
+                    tail.next = l2;
+                    l2 = l2.next;
+                }
 
-        let head = null;
-        let tail = null;
-
-        while (l1 && l2) {
-            let node;
-
-            if (l1.data <= l2.data) {
-                node = l1;
-                l1 = l1.next;
-            } else {
-                node = l2;
-                l2 = l2.next;
+                tail = tail.next;
             }
 
-            if (!head) {
-                head = node;
-                tail = node;
-            } else {
-                tail.next = node;
-                tail = node;
+            tail.next = l1 || l2;
+
+            return dummy.next;
+        }
+
+        function mergeSort(head, cmp) {
+            if (!head || !head.next) {
+                return head;
             }
+
+            let prev = null;
+            let slow = head;
+            let fast = head;
+
+             while (fast && fast.next) {
+                prev = slow;
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            prev.next = null;
+
+            let leftList = mergeSort(head, cmp);
+            let rightList = mergeSort(slow, cmp);
+
+            return merge(leftList, rightList, cmp);
         }
 
-        if (l1) {
-            tail.next = l1;
-        } else {
-            tail.next = l2;
-        }
-
-        return head;
+        this.head = mergeSort(this.head, cmp);
     }
 
-    mergeSort(head) {
-        if (!head || !head.next) {
-            return head;
-        }
-
-        let prev = null;
-        let slow = head;
-        let fast = head;
-
-        while (fast && fast.next) {
-            prev = slow;
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        prev.next = null;
-
-        let leftList = this.mergeSort(head);
-        let rightList = this.mergeSort(slow);
-
-        return this.merge(leftList, rightList);
-    }
-
-    sort() {
-        this.head = this.mergeSort(this.head);
-    }
 
     [Symbol.iterator]() {
         let current = this.head;
