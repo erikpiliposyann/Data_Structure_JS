@@ -37,6 +37,14 @@ class Stack {
         this.#size--;
     }
 
+    top() {
+        if (this.#size === 0) {
+            return undefined;
+        }
+
+        return this.arr[this.#size - 1];
+    }
+
     clear() {
         this.arr.length = 0;
         this.#size = 0;
