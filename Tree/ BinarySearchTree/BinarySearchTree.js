@@ -11,31 +11,35 @@ class BinarySearchTree {
         this.root = null;
     }
 
-    insert (value) {
-        if (!this.root) {
-            this.root = new TreeNode(value);
-            return;
+    _insert(node, value) {
+        if (!node) {
+            return new TreeNode(value);
+        }
+        if (node.value > value) {
+            
+            _insert(node, value)
         }
 
-        let current = this.root;
-        while(current) {
-            if (current.value > value) {
-                if (current.left === null) {
-                    current.left = new TreeNode(value);
-                    return;
-                }
-                current = current.left;
-            } else if (current.value < value){
-                if (current.right === null) {
-                    current.right = new TreeNode(value);
-                    return;
-                }
-                current = current.right;
-            }  else {
-                return;
-            }
-        }
     }
+
+    insertRecursive(value) {
+        
+
+
+    }
+
+    _contains(node, value) {}
+
+    _inorder(node, result) {}
+
+    _preOrder(node, result) {}
+
+    _postOrder(node, result) {}
+
+    _levelOrder(node, result) {}
+
+    _remove(node, value) {}
+
 
     search (value) {
         let current = this.root;
@@ -81,7 +85,7 @@ class BinarySearchTree {
     }
 
     findMax() {
-         if (!this.root) {
+        if (!this.root) {
             return null;
         }
         let current = this.root;
@@ -93,7 +97,34 @@ class BinarySearchTree {
         return current.value;
     }
 
-    remove (value) {
+    getMin(node) {
+        if (!node) {
+            return null;
+        }
+        let current = node;
+
+        while (current.left) {
+            current = current.left;
+        }  
+
+        return current;
+    } 
+
+    getMax(node) {
+        if (!node) {
+            return null;
+        }
+        let current = node;
+
+        while (current.right) {
+            current = current.right;
+        }  
+
+        return current;
+    }
+
+
+    removeIterative (value) {
         let current = this.root;
         let parent = null;
 
@@ -113,7 +144,6 @@ class BinarySearchTree {
             return;
         }
 
-       
         if (!current.left && !current.right) {
             if (!parent) {
                 this.root = null;
@@ -160,6 +190,36 @@ class BinarySearchTree {
             return;
         } 
     }
+
+
+    insertIterative (value) {
+        if (!this.root) {
+            this.root = new TreeNode(value);
+            return;
+        }
+
+        let current = this.root;
+        while(current) {
+            if (current.value > value) {
+                if (current.left === null) {
+                    current.left = new TreeNode(value);
+                    return;
+                }
+                current = current.left;
+            } else if (current.value < value){
+                if (current.right === null) {
+                    current.right = new TreeNode(value);
+                    return;
+                }
+                current = current.right;
+            }  else {
+                return;
+            }
+        }
+    }
+
+    
+
 
     inOrder() {
         const result = [];
